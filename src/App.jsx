@@ -1,12 +1,11 @@
 import { useState } from "react";
-
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
 import "./App.css";
-import { Container, Button,  } from "react-bootstrap";
-
+import { Container, Button } from "react-bootstrap";
+import kpr from "../src/assets/images/image1.jpeg";
 import musicalstatue from "../src/assets/images/musical statue.jpg";
 import samecolor from "../src/assets/images/ball collecting.webp";
-import { MdKeyboardDoubleArrowDown } from "react-icons/md";
-import toast ,{Toaster}  from 'react-hot-toast'
 
 const data = [
   { title: "Musical statue", img: musicalstatue },
@@ -15,7 +14,7 @@ const data = [
   { title: "Musical Chair", img: "../src/assets/images/musical chair.jpg" },
   { title: "Balloon Blow & Blast", img: "../src/assets/images/balloon blow & blast.jpg" },
   { title: "Lemon and Spoon", img: "../src/assets/images/lemon and spoon.png" },
-  { title: "Move Left & Right as per commands", img: "../src/assets/images/move left and right as per commands.jpg" },
+  { title: "Move Left and Right as per commands", img: "../src/assets/images/move left and right as per commands.jpg" },
   { title: "Musical find", img: "../src/assets/images/find music game.jpg" },
   { title: "Cup and balloon lifting.", img: "../src/assets/images/Cup and ball hitting.png" },
   { title: "Cup arrangement as Hill.", img: "../src/assets/images/cup arrangements as hill.jpg" },
@@ -56,15 +55,11 @@ function App() {
     }, {})
   );
 
-  const [isSubmitted,setIsSubmitted] =useState(false);
-
-  
   const handleRatingChange = (title, rating) => {
     const newRatings = { ...ratings, [title]: rating };
     setRatings(newRatings);
     console.log(`Game: ${title}, Rating: ${rating}`);
   };
-console.log("hello");
 
   const renderStars = (rating, title) => {
     let stars = [];
@@ -84,90 +79,42 @@ console.log("hello");
 
   // Handle submit button click
   const handleSubmit = async() => {
-    console.log(ratings);
-    const postRatings = Object.fromEntries(
-      Object.entries(ratings).filter(([_, rating]) => rating > 0)
-    );
-  
-    console.log(postRatings);
-
-    const len = Object.entries(postRatings).length;
-
-    if(len===0){
-      toast.error('Choose ratings before submitting!!')
-      return 
-    }
-    
-    try{ const response = await fetch( "https://meet-fawn-tau.vercel.app/count",{
+     const response = await fetch( "https://meet-fawn-tau.vercel.app/count",{
       method:"POST",
       headers:{
         'Content-type':'application/json'
       },
-      body:JSON.stringify(postRatings)
+      body:JSON.stringify(ratings)
      })
 
+     const resJson = await response.json();
+     
      if(! response.ok){
-      console.log(response);
-      throw new Error('Failed to Submit FeedBack!')
+      console.log(resJson);
       
-     }
-
-     toast.success("Feedback submitted !!")
-     setTimeout(()=>{
-      setIsSubmitted(true);
-     },1000);
-
-     }
-     catch(err){
-      console.log(err.message || "Error on submit ")
-      toast.error(err.message);
      }
   };
 
-
-  if(isSubmitted){
-    return (
-      <Container  fluid style={{height:"100dvh",fontFamily:'fantasy',textAlign:'center',}} className="p-0 thank ">
-       
-       <div className="layer2 d-flex flex-column align-items-center justify-content-center">
-       <p >THANK YOU!</p>
-       <p>Feedback submitted successfully..</p>
-        </div> 
-      </Container>
-    )
-  }
   return (
-    <>
-    <Toaster/>
-    <Container className="cards m-0 p-0 pb-5" fluid>
+    <Container className="">
       <div className="headings">
-        <div className="layer">
-          <div>
-          <p className="fs-2 text-center fw-bold  ">KPR FAMILY MEET - 2025</p>
-          <p className="fs-2 text-center fw-medium ">Feedback Form</p>
-          </div>
-          <div className="scroll rounded-circle">
-             <MdKeyboardDoubleArrowDown size={30}className="m-2" />
-             <p>Scroll down</p>
-          </div>
-        </div>
-        
-        
+        <p className="fs-2 text-center fw-bold text-white ">KPR FAMILY MEET -2025</p>
+        <p className="fs-2 text-center fw-medium text-white">Feedback Form</p>
+        <i className="fa fa-arrow-down"/>
       </div>
       
 
       {/* Regular Games Section */}
-      <h3 className="text-center text-decoration-underline d-block mt-4">Kids Games</h3>
-      <div className="game-section d-flex flex-column flex-md-row align-items-center">
-       
+      <div className="game-section d-flex flex-column align-items-center">
+        <h3 className="text-center text-decoration-underline  mt-4">Kids Games</h3>
         {data.map((item, ind) => {
           return (
-            <div key={ind} className="shadow-sm p-2 my-4 m-md-3 d-inline-flex flex-column  rounded ">
+            <div key={ind} className="shadow p-2 my-4 d-inline-flex flex-column ">
               <div>
                 <img src={item.img} width={270} height={270} />
               </div>
               <div>
-                <p className="fw-medium m-0 mt-2 fst-italic">{item.title}</p>
+                <p className="fw-medium m-0 mt-2">{item.title}</p>
                 <div className="stars m-0">
                   {renderStars(ratings[item.title], item.title)}
                 </div>
@@ -178,12 +125,11 @@ console.log("hello");
       </div>
 
       {/* Adult Boys Games Section */}
-      <h3 className="text-center text-decoration-underline  mt-4">Adult Boys Games</h3>
-      <div className="game-section mt-4 d-flex flex-column flex-md-row  align-items-center">
-       
+      <div className="game-section mt-4 d-flex flex-column align-items-center">
+        <h3 className="text-center text-decoration-underline  mt-4">Adult Boys Games</h3>
         {AdultBoys.map((item, ind) => {
           return (
-            <div key={ind} className="shadow-sm p-2 my-4 d-inline-flex flex-column ">
+            <div key={ind} className="shadow p-2 my-4 d-inline-flex flex-column ">
               <div>
                 <img src={item.img} width={270} height={270}/>
               </div>
@@ -199,9 +145,8 @@ console.log("hello");
       </div>
 
       {/* Adult Girls Games Section */}
-      <h3 className="text-center text-decoration-underline    mt-4">Adult Girls Games</h3>
-      <div className="game-section mt-4 d-flex flex-column flex-md-row  align-items-center">
-       
+      <div className="game-section mt-4 d-flex flex-column align-items-center">
+        <h3 className="text-center text-decoration-underline  mt-4">Adult Girls Games</h3>
         {AdultGirls.map((item, ind) => {
           return (
             <div key={ind} className="shadow p-2 my-4 d-inline-flex flex-column ">
@@ -220,9 +165,8 @@ console.log("hello");
       </div>
 
       {/* Couples Games Section */}
-      <h3 className="text-center text-decoration-underline  mt-4">Couples Games</h3>
-      <div className="game-section mt-4 d-flex flex-column flex-md-row  align-items-center">
-        
+      <div className="game-section mt-4 d-flex flex-column align-items-center">
+        <h3 className="text-center text-decoration-underline  mt-4">Couples Games</h3>
         {couples.map((item, ind) => {
           return (
             <div key={ind} className="shadow p-2 my-4 d-inline-flex flex-column ">
@@ -241,9 +185,8 @@ console.log("hello");
       </div>
 
       {/* Senior Citizen Games Section */}
-      <h3 className="text-center text-decoration-underline  mt-4">Senior Citizen Games</h3>
-
-      <div className="game-section mt-4 d-flex flex-column flex-md-row align-items-center">
+      <div className="game-section mt-4 d-flex flex-column align-items-center">
+        <h3 className="text-center text-decoration-underline  mt-4">Senior Citizen Games</h3>
         {seniorCitizen.map((item, ind) => {
           return (
             <div key={ind} className="shadow p-2 my-4 d-inline-flex flex-column ">
@@ -261,13 +204,12 @@ console.log("hello");
         })}
       </div>
       {/* Bootstrap Submit Button */}
-      <div className="text-center m-3 ">
+      <div className="text-center m-3 mb-5">
         <Button variant="primary" onClick={handleSubmit}>
           Submit Ratings
         </Button>
       </div>
     </Container>
-    </>
   );
 }
 
