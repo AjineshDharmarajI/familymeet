@@ -84,7 +84,7 @@ function App() {
       headers:{
         'Content-type':'application/json'
       },
-      body:JSON.stringify(ratings)
+      body:JSON.stringify(ratings) 
      })
 
      const resJson = await response.json();
@@ -163,6 +163,9 @@ function App() {
           );
         })}
       </div>
+
+      console.log("from new");
+      
 
       {/* Couples Games Section */}
       <div className="game-section mt-4 d-flex flex-column align-items-center">
